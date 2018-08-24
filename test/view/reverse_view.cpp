@@ -39,5 +39,11 @@ int main() {
 		static_assert(BidirectionalRange<decltype(x)>);
 		static_assert(!RandomAccessRange<decltype(x)>);
 	}
+	{
+		int rg[] = {0,1,2,3,4,5,6,7,8,9};
+		auto x = rg | view::reverse | view::reverse;
+		static_assert(Same<decltype(x), ext::ref_view<decltype(rg)>>);
+		CHECK(&x.base() == &rg);
+	}
  	return test_result();
 }
