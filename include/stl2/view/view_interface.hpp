@@ -72,9 +72,19 @@ STL2_OPEN_NAMESPACE {
 			return static_cast<const D&>(*this);
 		}
 	public:
+		constexpr bool empty() requires ForwardRange<D> {
+			auto& d = derived();
+			return __stl2::begin(d) == __stl2::end(d);
+		}
 		constexpr bool empty() const requires ForwardRange<const D> {
 			auto& d = derived();
 			return __stl2::begin(d) == __stl2::end(d);
+		}
+
+		constexpr explicit operator bool()
+		// Distinct named concept to workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82740
+		requires detail::CanEmpty<D> {
+			return !__stl2::empty(derived());
 		}
 		constexpr explicit operator bool() const
 		// Distinct named concept to workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82740
